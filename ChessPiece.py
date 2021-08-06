@@ -5,12 +5,14 @@ class ChessPiece(ABC):
 
     eatenPieces = []
     moveHistory = []
-    __x_ = 0
-    __y_ = 0
+    positionHistory = []
+    x = 0
+    y = 0
 
     def __init__(self, color):
         self.moved = False
         self.color = color
+        self.type = self.__class__.__name__
 
     def filter_moves(self):
         return
@@ -21,17 +23,26 @@ class ChessPiece(ABC):
     def set_last_eaten(self, piece):
         self.eatenPieces.append(piece)
 
-    def x(self):
-        return self.__x_
+    def set_position(self, x, y, keep_history):
+        if keep_history:
+            self.positionHistory.append(self.x)
+            self.positionHistory.append(self.y)
+            self.moveHistory.append(self.moved)
+        self.x = x
+        self.y = y
+        self.moved = True
 
-    def y(self):
-        return self.__y_
+    def set_old_position(self):
+        position_y = self.positionHistory.pop()
+        position_x = self.positionHistory.pop()
+        self.y = position_y
+        self.x = position_x
 
     def set_moved_previous(self):
         self.moved = self.moveHistory.pop()
 
     def __repr__(self):
-        return '{}: {}'.format(self.__class__.__name__, self.color)
+        return '{}: {}'.format(self.type, self.color)
 
 
 class Bishop(ChessPiece):

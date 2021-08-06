@@ -5,7 +5,7 @@ class Board:
     def __init__(self):
         self.board = []
         for i in range(8):
-            self.board.append(['-' for i in range(8)])
+            self.board.append(['empty_block' for i in range(8)])
 
     def place_pieces(self, player_has_whites=True):
         for j in range(8):
@@ -30,14 +30,33 @@ class Board:
         if not player_has_whites:
             self.board = self.board[::-1]
 
-    def make_move(self, x, y):
-        pass
+    def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
+
+        piece_x = piece.x
+        piece_y = piece.y
+        self.board[piece_x][piece_y].set_last_eaten(self.board[x][y])
+        self.board[x][y] = self.board[piece_x][piece_y]
+        self.board[piece_x][piece_y].set_position(x, y, keep_history)
+        self.board[piece_x][piece_y] = 'empty-block'
 
     def unmake_move(self, piece):
-        pass
 
-    def reverse_board(self):
-        pass
+        x = piece.x
+        y = piece.y
+        self.board[x][y].set_old_position()
+        self.board[x][y].set_moved_previous()
+        old_x = self.board[x][y].x
+        old_y = self.board[x][y].y
+        self.board[old_x][old_y] = self.board[x][y]
+
+    def set_positions(self):
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] != 'empty_block':
+                    self.board[i][j].set_position(i, j, False)
+
+    def __getitem__(self, item):
+        return self.board[item]
 
     def __repr__(self):
         return str(self.board[::-1]).replace('], ', ']\n')
