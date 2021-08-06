@@ -47,34 +47,77 @@ class ChessPiece(ABC):
 
 class Bishop(ChessPiece):
 
-    def get_moves(self):
+    def get_moves(self, board):
+        pass
+
+    def get_top_right_moves(self, board):
+        pass
+
+    def get_top_left_moves(self, board):
+        pass
+
+    def get_bot_right_moves(self, board):
+        pass
+
+    def get_top_left_moves(self, board):
         pass
 
 
 class Rook(ChessPiece):
 
-    def get_moves(self):
+    def get_moves(self, board):
+        pass
+
+    def get_top_moves(self, board):
+        pass
+
+    def get_bot_moves(self, board):
+        pass
+
+    def get_right_moves(self, board):
+        pass
+
+    def get_left_moves(self, board):
         pass
 
 
 class Queen(ChessPiece):
 
-    def get_moves(self):
-        pass
+    def get_moves(self, board):
+        moves = []
+        rook = Rook(self.color)
+        rook.set_position(self.x, self.y, False)
+        bishop = Bishop(self.color)
+        bishop.set_position(self.x, self.y, False)
+        moves.append(rook.get_moves(board))
+        moves.append(bishop.get_moves(board))
+        return moves
 
 
 class King(ChessPiece):
 
-    def get_moves(self):
+    def get_moves(self, board):
         pass
 
 
 class Pawn(ChessPiece):
-    def get_moves(self):
+    def get_moves(self, board):
+        pass
+
+    def get_top_moves(self, board):
+        pass
+
+    def get_bot_moves(self, board):
         pass
 
 
 class Knight(ChessPiece):
 
-    def get_moves(self):
+    def get_moves(self, board):
+        pass
+
+    def get_top_moves(self, board):
+        pass
+
+    def get_bot_moves(self, board):
         pass
