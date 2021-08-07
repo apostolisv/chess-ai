@@ -3,7 +3,7 @@ from ChessPiece import *
 
 class Board:
 
-    def __init__(self, game_mode = 0):    # game_mode = 0 : player has white pieces
+    def __init__(self, game_mode=0):    # game_mode == 0 : player has white pieces
         self.board = []
         self.game_mode = game_mode
         for i in range(8):
@@ -11,24 +11,24 @@ class Board:
 
     def place_pieces(self):
         for j in range(8):
-            self.board[1][j] = Pawn('white')
-            self.board[6][j] = Pawn('black')
-        self.board[0][0] = Rook('white')
-        self.board[0][7] = Rook('white')
-        self.board[0][1] = Knight('white')
-        self.board[0][6] = Knight('white')
-        self.board[0][2] = Bishop('white')
-        self.board[0][5] = Bishop('white')
-        self.board[0][3] = Queen('white')
-        self.board[0][4] = King('white')
-        self.board[7][0] = Rook('black')
-        self.board[7][7] = Rook('black')
-        self.board[7][1] = Knight('black')
-        self.board[7][6] = Knight('black')
-        self.board[7][2] = Bishop('black')
-        self.board[7][5] = Bishop('black')
-        self.board[7][3] = Queen('black')
-        self.board[7][4] = King('black')
+            self.board[1][j] = Pawn('white', 1, j)
+            self.board[6][j] = Pawn('black', 6, j)
+        self.board[0][0] = Rook('white', 0, 0)
+        self.board[0][7] = Rook('white', 0, 7)
+        self.board[0][1] = Knight('white', 0, 1)
+        self.board[0][6] = Knight('white', 0, 6)
+        self.board[0][2] = Bishop('white', 0, 2)
+        self.board[0][5] = Bishop('white', 0, 5)
+        self.board[0][3] = Queen('white', 0, 3)
+        self.board[0][4] = King('white', 0, 4)
+        self.board[7][0] = Rook('black', 7, 0)
+        self.board[7][7] = Rook('black', 7, 7)
+        self.board[7][1] = Knight('black', 7, 1)
+        self.board[7][6] = Knight('black', 7, 6)
+        self.board[7][2] = Bishop('black', 7, 2)
+        self.board[7][5] = Bishop('black', 7, 5)
+        self.board[7][3] = Queen('black', 7, 3)
+        self.board[7][4] = King('black', 7, 4)
         if self.game_mode != 0:
             self.board = self.board[::-1]
 
@@ -50,12 +50,7 @@ class Board:
         old_x = self.board[x][y].x
         old_y = self.board[x][y].y
         self.board[old_x][old_y] = self.board[x][y]
-
-    def set_positions(self):
-        for i in range(8):
-            for j in range(8):
-                if self.board[i][j] != 'empty_block':
-                    self.board[i][j].set_position(i, j, False)
+        self.board[x][y] = 'empty_block'
 
     def __getitem__(self, item):
         return self.board[item]
@@ -69,6 +64,9 @@ class Board:
         if self.board[x][y] != 'empty_block':
             return piece.color == self.board[x][y].color
         return False
+
+    def is_valid_move(self, x, y):
+        return 0 <= x < 8 and 0 <= y < 8
 
     def has_empty_block(self, x, y):
         return self.board[x][y] == 'empty_block'
