@@ -7,7 +7,7 @@ class Board:
         self.board = []
         self.game_mode = game_mode
         for i in range(8):
-            self.board.append(['empty_block' in range(8)])
+            self.board.append(['empty_block' for i in range(8)])
 
     def place_pieces(self):
         for j in range(8):
