@@ -1,5 +1,6 @@
 import pygame
 from ChessPiece import *
+from Computer import get_random_move, get_ai_move
 
 dark_block = pygame.image.load('assets/JohnPablok Cburnett Chess set/128px/square brown dark_png_shadow_128px.png')
 light_block = pygame.image.load('assets/JohnPablok Cburnett Chess set/128px/square brown light_png_shadow_128px.png')
@@ -106,19 +107,25 @@ def start(board):
     global screen
     running = True
     visible_moves = False
+    dimensions = pygame.display.get_surface().get_size()
+    piece = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                x = 7 - pygame.mouse.get_pos()[1]//75
-                y = pygame.mouse.get_pos()[0]//75
-                if isinstance(board[x][y], ChessPiece):
+                x = 7 - pygame.mouse.get_pos()[1] // 75
+                y = pygame.mouse.get_pos()[0] // 75
+                if isinstance(board[x][y], ChessPiece) and board.get_player_color() == board[x][y].color:
+                    piece = board[x][y]
                     moves = board[x][y].get_moves(board)
                     move_positions = []
-                    dimensions = pygame.display.get_surface().get_size()
+                    possible_piece_moves = []
                     for move in moves:
                         move_positions.append((dimensions[0] - (8 - move[1]) * 75, dimensions[1] - move[0] * 75 - 75))
+                        move_x = 7 - move_positions[-1][1]//75
+                        move_y = move_positions[-1][0]//75
+                        possible_piece_moves.append((move_x, move_y))
                     if visible_moves:
                         draw_background(board)
                         visible_moves = False
@@ -126,3 +133,13 @@ def start(board):
                         visible_moves = True
                         screen.blit(highlight_block, (move[0], move[1]))
                         pygame.display.update()
+                else:
+                    clicked_x = 7 - pygame.mouse.get_pos()[1] // 75
+                    clicked_y = pygame.mouse.get_pos()[0] // 75
+                    clicked_move = (clicked_x, clicked_y)
+                    if clicked_move in possible_piece_moves:
+                        board.make_move(piece, clicked_x, clicked_y)
+                        draw_background(board)
+                        get_random_move(board)
+                        draw_background(board)
+

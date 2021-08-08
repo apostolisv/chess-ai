@@ -35,7 +35,8 @@ class Board:
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
         piece_x = piece.x
         piece_y = piece.y
-        self.board[piece_x][piece_y].set_last_eaten(self.board[x][y])
+        if keep_history:
+            self.board[piece_x][piece_y].set_last_eaten(self.board[x][y])
         self.board[x][y] = self.board[piece_x][piece_y]
         self.board[piece_x][piece_y].set_position(x, y, keep_history)
         self.board[piece_x][piece_y] = 'empty-block'
@@ -67,13 +68,19 @@ class Board:
             return piece.color == self.board[x][y].color
         return False
 
-    def is_valid_move(self, x, y):
+    @staticmethod
+    def is_valid_move(x, y):
         return 0 <= x < 8 and 0 <= y < 8
 
     def has_empty_block(self, x, y):
         if not self.is_valid_move(x, y):
             return False
         return not isinstance(self.board[x][y], ChessPiece)
+
+    def get_player_color(self):
+        if self.game_mode == 0:
+            return 'white'
+        return 'black'
 
     def __repr__(self):
         return str(self.board[::-1]).replace('], ', ']\n')
