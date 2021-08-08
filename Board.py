@@ -7,7 +7,7 @@ class Board:
         self.board = []
         self.game_mode = game_mode
         for i in range(8):
-            self.board.append(['empty_block' for i in range(8)])
+            self.board.append(['empty-block' for i in range(8)])
 
     def place_pieces(self):
         for j in range(8):
@@ -48,7 +48,7 @@ class Board:
         old_x = self.board[x][y].x
         old_y = self.board[x][y].y
         self.board[old_x][old_y] = self.board[x][y]
-        self.board[x][y] = 'empty_block'
+        self.board[x][y] = 'empty-block'
 
     def __getitem__(self, item):
         return self.board[item]

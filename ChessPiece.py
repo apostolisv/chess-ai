@@ -4,11 +4,13 @@ from itertools import product
 
 class ChessPiece:
 
-    eatenPieces = []
+    # history is used to keep data so board.unmake_move works properly.
+    eatenPiecesHistory = []
     moveHistory = []
     positionHistory = []
-    x = 0
-    y = 0
+
+    x = -1
+    y = -1
 
     def __init__(self, color, x, y):
         self.moved = False
@@ -30,10 +32,10 @@ class ChessPiece:
         pass
 
     def get_last_eaten(self):
-        return self.eatenPieces.pop()
+        return self.eatenPiecesHistory.pop()
 
     def set_last_eaten(self, piece):
-        self.eatenPieces.append(piece)
+        self.eatenPiecesHistory.append(piece)
 
     def set_position(self, x, y, keep_history):
         if keep_history:
@@ -119,12 +121,14 @@ class Queen(ChessPiece):
 
     def get_moves(self, board):
         moves = []
-        rook = Rook(self.color)
-        rook.set_position(self.x, self.y, False)
-        bishop = Bishop(self.color)
-        bishop.set_position(self.x, self.y, False)
-        moves.append(rook.get_moves(board))
-        moves.append(bishop.get_moves(board))
+        rook = Rook(self.color, self.x, self.y)
+        bishop = Bishop(self.color, self.x, self.y)
+        rook_moves = rook.get_moves(board)
+        bishop_moves = bishop.get_moves(board)
+        if rook_moves:
+            moves.append(rook_moves)
+        if bishop_moves:
+            moves.append(bishop_moves)
         return moves
 
 

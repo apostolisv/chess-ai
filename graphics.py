@@ -32,13 +32,22 @@ blackKing = pygame.transform.scale(blackKing, (75, 75))
 blackQueen = pygame.image.load('assets/JohnPablok Cburnett Chess set/128px/b_queen_png_shadow_128px.png')
 blackQueen = pygame.transform.scale(blackQueen, (75, 75))
 
+highlight_block = pygame.image.load('assets/JohnPablok Cburnett Chess set/128px/highlight_128px.png')
+highlight_block = pygame.transform.scale(highlight_block, (75, 75))
 
-def initialize(board):
+screen = None
+
+
+def initialize():
+    global screen
     pygame.init()
     pygame.display.set_caption('Chess!')
     icon = pygame.image.load('assets/icon.png')
     pygame.display.set_icon(icon)
     screen = pygame.display.set_mode((600, 600))
+
+
+def draw_background(board):
     screen.fill((100, 0, 0))
 
     block_x = 0
@@ -87,14 +96,16 @@ def initialize(board):
                     else:
                         obj = blackKing
                 screen.blit(obj, (step_x, step_y))
-                step_x += 75
+            step_x += 75
         step_x = 0
         step_y -= 75
     pygame.display.update()
 
 
 def start(board):
+    global screen
     running = True
+    visible_moves = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -103,5 +114,15 @@ def start(board):
                 x = 7 - pygame.mouse.get_pos()[1]//75
                 y = pygame.mouse.get_pos()[0]//75
                 if isinstance(board[x][y], ChessPiece):
-                    print(board[x][y].get_moves(board))
-
+                    moves = board[x][y].get_moves(board)
+                    move_positions = []
+                    dimensions = pygame.display.get_surface().get_size()
+                    for move in moves:
+                        move_positions.append((dimensions[0] - (8 - move[1]) * 75, dimensions[1] - move[0] * 75 - 75))
+                    if visible_moves:
+                        draw_background(board)
+                        visible_moves = False
+                    for move in move_positions:
+                        visible_moves = True
+                        screen.blit(highlight_block, (move[0], move[1]))
+                        pygame.display.update()
