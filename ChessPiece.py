@@ -17,8 +17,17 @@ class ChessPiece:
         self.y = y
         self.type = self.__class__.__name__
 
-    def filter_moves(self):
-        return
+    def filter_moves(self, moves, board):
+        final_moves = moves[:]
+        for move in moves:
+            board.make_move(self, move[0], move[1], keep_history=True)
+            if board.king_is_threatened(self.color):
+                final_moves.remove(move)
+            board.unmake_move(self)
+        return final_moves
+
+    def get_moves(self, prevent_king_death=False):
+        pass
 
     def get_last_eaten(self):
         return self.eatenPieces.pop()
@@ -188,4 +197,3 @@ class Knight(ChessPiece):
             if board.has_empty_block(x, y) or board.has_opponent((self, x, y)) or board.has_friend(self, x, y) and prevent_king_death:
                 moves.append((x, y))
         return moves
-

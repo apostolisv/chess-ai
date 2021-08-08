@@ -7,7 +7,7 @@ class Board:
         self.board = []
         self.game_mode = game_mode
         for i in range(8):
-            self.board.append(['empty_block' for i in range(8)])
+            self.board.append(['empty_block' in range(8)])
 
     def place_pieces(self):
         for j in range(8):
@@ -33,7 +33,6 @@ class Board:
             self.board = self.board[::-1]
 
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
-
         piece_x = piece.x
         piece_y = piece.y
         self.board[piece_x][piece_y].set_last_eaten(self.board[x][y])
@@ -42,7 +41,6 @@ class Board:
         self.board[piece_x][piece_y] = 'empty-block'
 
     def unmake_move(self, piece):
-
         x = piece.x
         y = piece.y
         self.board[x][y].set_old_position()
@@ -56,12 +54,12 @@ class Board:
         return self.board[item]
 
     def has_opponent(self, piece, x, y):
-        if self.board[x][y] != 'empty_block':
+        if isinstance(self.board[x][y], ChessPiece):
             return piece.color != self.board[x][y].color
         return False
 
     def has_friend(self, piece, x, y):
-        if self.board[x][y] != 'empty_block':
+        if isinstance(self.board[x][y], ChessPiece):
             return piece.color == self.board[x][y].color
         return False
 
@@ -69,7 +67,7 @@ class Board:
         return 0 <= x < 8 and 0 <= y < 8
 
     def has_empty_block(self, x, y):
-        return self.board[x][y] == 'empty_block'
+        return not isinstance(self.board[x][y], ChessPiece)
 
     def __repr__(self):
         return str(self.board[::-1]).replace('], ', ']\n')
