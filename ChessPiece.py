@@ -53,8 +53,56 @@ class ChessPiece:
         self.x = position_x
         self.moved = self.has_moved_history.pop()
 
+    def get_score(self):
+        return 0
+
     def __repr__(self):
         return '{}: {}'.format(self.type, self.color)
+
+
+class Pawn(ChessPiece):
+
+    def get_moves(self, board):
+        moves = []
+        if board.game_mode == 0 and self.color == 'white' or board.game_mode == 1 and self.color == 'black':
+            direction = 1
+        else:
+            direction = -1
+        x = self.x + direction
+        if board.has_empty_block(x, self.y):
+            moves.append((x, self.y))
+            if self.moved is False and board.has_empty_block(x + direction, self.y):
+                moves.append((x + direction, self.y))
+        if board.is_valid_move(x, self.y - 1):
+            if board.has_opponent(self, x, self.y - 1):
+                moves.append((x, self.y - 1))
+        if board.is_valid_move(self.x + direction, self.y + 1):
+            if board.has_opponent(self, x, self.y + 1):
+                moves.append((x, self.y + 1))
+        return moves
+
+    def get_score(self):
+        return 10
+
+
+class Knight(ChessPiece):
+
+    def get_moves(self, board):
+        moves = []
+        add = operator.add
+        sub = operator.sub
+        op_list = [(add, sub), (sub, add), (add, add), (sub, sub)]
+        nums = [(1, 2), (2, 1)]
+        combinations = list(product(op_list, nums))
+        for comb in combinations:
+            x = comb[0][0](self.x, comb[1][0])
+            y = comb[0][1](self.y, comb[1][1])
+            if board.has_empty_block(x, y) or board.has_opponent(self, x, y):
+                moves.append((x, y))
+        return moves
+
+    def get_score(self):
+        return 20
 
 
 class Bishop(ChessPiece):
@@ -76,6 +124,9 @@ class Bishop(ChessPiece):
                     moves.append((x, y))
                     break
         return moves
+
+    def get_score(self):
+        return 30
 
 
 class Rook(ChessPiece):
@@ -114,6 +165,9 @@ class Rook(ChessPiece):
                     break
         return moves
 
+    def get_score(self):
+        return 30
+
 
 class Queen(ChessPiece):
 
@@ -128,6 +182,9 @@ class Queen(ChessPiece):
         if bishop_moves:
             moves.extend(bishop_moves)
         return moves
+
+    def get_score(self):
+        return 120
 
 
 class King(ChessPiece):
@@ -158,41 +215,5 @@ class King(ChessPiece):
                 moves.append((self.x, y))
         return moves
 
-
-class Pawn(ChessPiece):
-
-    def get_moves(self, board):
-        moves = []
-        if board.game_mode == 0 and self.color == 'white' or board.game_mode == 1 and self.color == 'black':
-            direction = 1
-        else:
-            direction = -1
-        x = self.x + direction
-        if board.has_empty_block(x, self.y):
-            moves.append((x, self.y))
-            if self.moved is False and board.has_empty_block(x + direction, self.y):
-                moves.append((x + direction, self.y))
-        if board.is_valid_move(x, self.y - 1):
-            if board.has_opponent(self, x, self.y - 1):
-                moves.append((x, self.y - 1))
-        if board.is_valid_move(self.x + direction, self.y + 1):
-            if board.has_opponent(self, x, self.y + 1):
-                moves.append((x, self.y + 1))
-        return moves
-
-
-class Knight(ChessPiece):
-
-    def get_moves(self, board):
-        moves = []
-        add = operator.add
-        sub = operator.sub
-        op_list = [(add, sub), (sub, add), (add, add), (sub, sub)]
-        nums = [(1, 2), (2, 1)]
-        combinations = list(product(op_list, nums))
-        for comb in combinations:
-            x = comb[0][0](self.x, comb[1][0])
-            y = comb[0][1](self.y, comb[1][1])
-            if board.has_empty_block(x, y) or board.has_opponent(self, x, y):
-                moves.append((x, y))
-        return moves
+    def get_score(self):
+        return 1000

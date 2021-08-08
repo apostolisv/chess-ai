@@ -119,7 +119,6 @@ def start(board):
                 if isinstance(board[x][y], ChessPiece) and board.get_player_color() == board[x][y].color:
                     piece = board[x][y]
                     moves = board[x][y].filter_moves(board[x][y].get_moves(board), board)
-                    # moves = board[x][y].get_moves(board)
                     move_positions = []
                     possible_piece_moves = []
                     for move in moves:
@@ -141,6 +140,7 @@ def start(board):
                     if clicked_move in possible_piece_moves:
                         board.make_move(piece, clicked_x, clicked_y)
                         draw_background(board)
-                        get_random_move(board)
+                        has_available_move = get_ai_move(board)
                         draw_background(board)
-
+                        if not has_available_move:
+                            return

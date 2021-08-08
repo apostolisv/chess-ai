@@ -99,5 +99,99 @@ class Board:
                 return True
         return False
 
+    def is_terminal(self):
+        terminal1 = self.white_won()
+        terminal2 = self.black_won()
+        terminal3 = self.draw()
+        return terminal1 or terminal2 or terminal3
+
+    def draw(self):
+        if not self.king_is_threatened('white') and not self.has_moves('white'):
+            return True
+        if not self.king_is_threatened('black') and not self.has_moves('black'):
+            return True
+        if self.insufficient_material():
+            return True
+        return False
+
+    def white_won(self):
+        if self.king_is_threatened('white') and not self.has_moves('white'):
+            return True
+        return False
+
+    def black_won(self):
+        if self.king_is_threatened('black') and not self.has_moves('black'):
+            return True
+        return False
+
+    def has_moves(self, color):
+        total_moves = 0
+        for i in range(8):
+            for j in range(8):
+                if isinstance(self.board[i][j], ChessPiece) and self.board[i][j].color == color:
+                    piece = self.board[i][j]
+                    total_moves += len(piece.filter_moves(piece.get_moves(self), self))
+                    if total_moves > 0:
+                        return True
+        return False
+
+    def insufficient_material(self):
+        total_white_knights = 0
+        total_black_knights = 0
+        total_white_bishops = 0
+        total_black_bishops = 0
+        total_other_white_pieces = 0
+        total_other_black_pieces = 0
+
+        for i in range(8):
+            for j in range(8):
+                if isinstance(self.board[i][j], ChessPiece):
+                    piece = self.board[i][j]
+                    if piece.type == 'Knight':
+                        if piece.color == 'white':
+                            total_white_knights += 1
+                        else:
+                            total_black_knights += 1
+                    if piece.type == 'Bishop':
+                        if piece.color == 'white':
+                            total_white_bishops += 1
+                        else:
+                            total_black_bishops += 1
+                    elif piece.type != 'King':
+                        if piece.color == 'white':
+                            total_other_white_pieces += 1
+                        else:
+                            total_other_black_pieces += 1
+        weak_white_pieces = total_white_bishops + total_white_knights
+        weak_black_pieces = total_black_bishops + total_black_knights
+
+        if total_other_black_pieces > 0 or total_other_white_pieces > 0:
+            return False
+        if weak_black_pieces == weak_white_pieces == 0 and total_other_white_pieces == total_other_black_pieces == 0:
+            return True
+        if weak_white_pieces == 1 and weak_black_pieces == 1:
+            return True
+        if weak_white_pieces == 0 and weak_black_pieces == 1 or weak_white_pieces == 1 and weak_black_pieces == 0:
+            return True
+        if total_white_knights == 2 and weak_black_pieces == total_other_black_pieces == 0:
+            return True
+        if total_black_knights == 2 and weak_white_pieces == total_other_white_pieces == 0:
+            return True
+
+    def evaluate(self):
+        white_points = 0
+        black_points = 0
+        for i in range(8):
+            for j in range(8):
+                if isinstance(self.board[i][j], ChessPiece):
+                    piece = self.board[i][j]
+                    if piece.color == 'white':
+                        white_points += piece.get_score()
+                    else:
+                        black_points += piece.get_score()
+        if self.game_mode == 0:
+            return black_points - white_points
+        return white_points - black_points
+
     def __repr__(self):
         return str(self.board[::-1]).replace('], ', ']\n')
