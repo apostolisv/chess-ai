@@ -51,8 +51,6 @@ class ChessPiece:
         position_x = self.position_history.pop()
         self.y = position_y
         self.x = position_x
-
-    def set_moved_previous(self):
         self.moved = self.has_moved_history.pop()
 
     def __repr__(self):

@@ -18,7 +18,7 @@ def get_random_move(board):
             if isinstance(board[i][j], ChessPiece) and board[i][j].color != board.get_player_color():
                 pieces.append(board[i][j])
     for piece in pieces[:]:
-        piece_moves = piece.get_moves(board)
+        piece_moves = piece.filter_moves(piece.get_moves(board), board)
         if len(piece_moves) == 0:
             pieces.remove(piece)
         else:

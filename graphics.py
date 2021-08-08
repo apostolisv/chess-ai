@@ -118,7 +118,8 @@ def start(board):
                 y = pygame.mouse.get_pos()[0] // 75
                 if isinstance(board[x][y], ChessPiece) and board.get_player_color() == board[x][y].color:
                     piece = board[x][y]
-                    moves = board[x][y].get_moves(board)
+                    moves = board[x][y].filter_moves(board[x][y].get_moves(board), board)
+                    # moves = board[x][y].get_moves(board)
                     move_positions = []
                     possible_piece_moves = []
                     for move in moves:

@@ -33,23 +33,22 @@ class Board:
             self.board = self.board[::-1]
 
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
-        piece_x = piece.x
-        piece_y = piece.y
+        old_x = piece.x
+        old_y = piece.y
         if keep_history:
-            self.board[piece_x][piece_y].set_last_eaten(self.board[x][y])
-        self.board[x][y] = self.board[piece_x][piece_y]
-        self.board[piece_x][piece_y].set_position(x, y, keep_history)
-        self.board[piece_x][piece_y] = 'empty-block'
+            self.board[old_x][old_y].set_last_eaten(self.board[x][y])
+        self.board[x][y] = self.board[old_x][old_y]
+        self.board[old_x][old_y] = 'empty-block'
+        self.board[x][y].set_position(x, y, keep_history)
 
     def unmake_move(self, piece):
         x = piece.x
         y = piece.y
         self.board[x][y].set_old_position()
-        self.board[x][y].set_moved_previous()
-        old_x = self.board[x][y].x
-        old_y = self.board[x][y].y
+        old_x = piece.x
+        old_y = piece.y
         self.board[old_x][old_y] = self.board[x][y]
-        self.board[x][y] = 'empty-block'
+        self.board[x][y] = piece.get_last_eaten()
 
     def __getitem__(self, item):
         return self.board[item]
@@ -81,6 +80,24 @@ class Board:
         if self.game_mode == 0:
             return 'white'
         return 'black'
+
+    def king_is_threatened(self, color):
+        enemies = []
+        king_x = -1
+        king_y = -1
+        for i in range(8):
+            for j in range(8):
+                if isinstance(self.board[i][j], ChessPiece):
+                    if self.board[i][j].type == 'King' and self.board[i][j].color == color:
+                        king_x = i
+                        king_y = j
+                    elif self.board[i][j].color != color:
+                        enemies.append(self.board[i][j])
+        for enemy in enemies:
+            moves = enemy.get_moves(self)
+            if (king_x, king_y) in moves:
+                return True
+        return False
 
     def __repr__(self):
         return str(self.board[::-1]).replace('], ', ']\n')
