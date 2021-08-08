@@ -66,8 +66,8 @@ class Bishop(ChessPiece):
         operators = [(add, add), (add, sub), (sub, add), (sub, sub)]
         for ops in operators:
             for i in range(1, 9):
-                x = ops[0](self.x)
-                y = ops[1](self.y)
+                x = ops[0](self.x, i)
+                y = ops[1](self.y, i)
                 if not board.is_valid_move(x, y) or board.has_friend(self, x, y) and not prevent_king_death:
                     break
                 if board.has_empty_block(x, y):
@@ -91,7 +91,7 @@ class Rook(ChessPiece):
         for op in [operator.add, operator.sub]:
             for i in range(1, 9):
                 x = op(self.x, i)
-                if not board.is_valid_move(x, self.y) or board.has_friend(x, self.y) and not prevent_king_death:
+                if not board.is_valid_move(x, self.y) or board.has_friend(self, x, self.y) and not prevent_king_death:
                     break
                 if board.has_empty_block(x, self.y):
                     moves.append((x, self.y))
@@ -105,7 +105,7 @@ class Rook(ChessPiece):
         for op in [operator.add, operator.sub]:
             for i in range(1, 9):
                 y = op(self.y, i)
-                if not board.is_valid_move(self.x, y) or board.has_friend(self.x, y) and not prevent_king_death:
+                if not board.is_valid_move(self.x, y) or board.has_friend(self, self.x, y) and not prevent_king_death:
                     break
                 if board.has_empty_block(self.x, y):
                     moves.append((self.x, y))
@@ -165,20 +165,17 @@ class Pawn(ChessPiece):
             direction = 1
         else:
             direction = -1
-        if board.has_empty_block(self.x + direction, self.y) and not prevent_king_death:
-            moves.append((self.x + direction, self.y))
-            if self.moved is False and board.has_empty_block(self.x + 2 * direction, self.y):
-                moves.append((self.x + 2 * direction, self.y))
-        if board.is_valid_move(self.x + direction, self.y - 1):
-            if board.has_opponent(self, self.x + direction, self.y - 1) or board.has_empty_block(self.x + direction,
-                                                                                                 self.y - 1) or board.has_firend(
-                    self, self.x + direction, self.y - 1 and prevent_king_death):
-                moves.append((self.x + direction, self.y - 1))
+        x = self.x + direction
+        if board.has_empty_block(x, self.y) and not prevent_king_death:
+            moves.append((x, self.y))
+            if self.moved is False and board.has_empty_block(x + direction, self.y):
+                moves.append((x + direction, self.y))
+        if board.is_valid_move(x, self.y - 1):
+            if board.has_opponent(self, x, self.y - 1) or ((board.has_empty_block(x, self.y - 1) or board.has_firend(self, x, self.y - 1)) and prevent_king_death):
+                moves.append((x, self.y - 1))
         if board.is_valid_move(self.x + direction, self.y + 1):
-            if board.has_opponent(self, self.x + direction, self.y + 1) or board.has_empty_block(self.x + direction,
-                                                                                                 self.y + 1) or board.has_firend(
-                    self, self.x + direction, self.y + 1 and prevent_king_death):
-                moves.append((self.x + direction, self.y + 1))
+            if board.has_opponent(self, x, self.y + 1) or ((board.has_empty_block(x, self.y + 1) or board.has_firend(self, x, self.y + 1)) and prevent_king_death):
+                moves.append((x, self.y + 1))
         return moves
 
 
@@ -193,7 +190,7 @@ class Knight(ChessPiece):
         combinations = list(product(op_list, nums))
         for comb in combinations:
             x = comb[0][0](self.x, comb[1][0])
-            y = comb[0][1](self.y, comb[1][0])
-            if board.has_empty_block(x, y) or board.has_opponent((self, x, y)) or board.has_friend(self, x, y) and prevent_king_death:
+            y = comb[0][1](self.y, comb[1][1])
+            if board.has_empty_block(x, y) or board.has_opponent(self, x, y) or board.has_friend(self, x, y) and prevent_king_death:
                 moves.append((x, y))
         return moves

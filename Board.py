@@ -54,11 +54,15 @@ class Board:
         return self.board[item]
 
     def has_opponent(self, piece, x, y):
+        if not self.is_valid_move(x, y):
+            return False
         if isinstance(self.board[x][y], ChessPiece):
             return piece.color != self.board[x][y].color
         return False
 
     def has_friend(self, piece, x, y):
+        if not self.is_valid_move(x, y):
+            return False
         if isinstance(self.board[x][y], ChessPiece):
             return piece.color == self.board[x][y].color
         return False
@@ -67,6 +71,8 @@ class Board:
         return 0 <= x < 8 and 0 <= y < 8
 
     def has_empty_block(self, x, y):
+        if not self.is_valid_move(x, y):
+            return False
         return not isinstance(self.board[x][y], ChessPiece)
 
     def __repr__(self):

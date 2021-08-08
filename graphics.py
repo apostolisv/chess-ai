@@ -102,5 +102,6 @@ def start(board):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x = 7 - pygame.mouse.get_pos()[1]//75
                 y = pygame.mouse.get_pos()[0]//75
-                print(board[x][y])
+                if isinstance(board[x][y], ChessPiece):
+                    print(board[x][y].get_moves(board))
 
