@@ -109,6 +109,9 @@ def start(board):
     visible_moves = False
     dimensions = pygame.display.get_surface().get_size()
     piece = None
+    #if board.game_mode == 1:
+     #   get_ai_move(board)
+      #  draw_background(board)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -118,7 +121,7 @@ def start(board):
                 y = pygame.mouse.get_pos()[0] // 75
                 if isinstance(board[x][y], ChessPiece) and board.get_player_color() == board[x][y].color:
                     piece = board[x][y]
-                    moves = board[x][y].filter_moves(board[x][y].get_moves(board), board)
+                    moves = piece.filter_moves(piece.get_moves(board), board)
                     move_positions = []
                     possible_piece_moves = []
                     for move in moves:
@@ -141,6 +144,12 @@ def start(board):
                         board.make_move(piece, clicked_x, clicked_y)
                         draw_background(board)
                         has_available_move = get_ai_move(board)
-                        draw_background(board)
-                        if not has_available_move:
-                            return
+                        if has_available_move:
+                            draw_background(board)
+                    if board.white_won():
+                        return 0
+                    elif board.black_won():
+                        return 1
+                    elif board.draw():
+                        return 2
+

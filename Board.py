@@ -30,7 +30,7 @@ class Board:
         self.board[7][3] = Queen('black', 7, 3)
         self.board[7][4] = King('black', 7, 4)
         if self.game_mode != 0:
-            self.board = self.board[::-1]
+            self.reverse()
 
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
         old_x = piece.x
@@ -49,6 +49,15 @@ class Board:
         old_y = piece.y
         self.board[old_x][old_y] = self.board[x][y]
         self.board[x][y] = piece.get_last_eaten()
+
+    def reverse(self):
+        self.board = self.board[::-1]
+        for i in range(8):
+            for j in range(8):
+                if isinstance(self.board[i][j], ChessPiece):
+                    piece = self.board[i][j]
+                    piece.x = i
+                    piece.y = j
 
     def __getitem__(self, item):
         return self.board[item]
