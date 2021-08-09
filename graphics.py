@@ -109,9 +109,9 @@ def start(board):
     visible_moves = False
     dimensions = pygame.display.get_surface().get_size()
     piece = None
-    #if board.game_mode == 1:
-     #   get_ai_move(board)
-      #  draw_background(board)
+    if board.game_mode == 1:
+        get_ai_move(board)
+        draw_background(board)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
