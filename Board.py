@@ -3,9 +3,10 @@ from ChessPiece import *
 
 class Board:
 
-    def __init__(self, game_mode=0):    # game_mode == 0 : player has white pieces
+    def __init__(self, game_mode=0, depth=3):    # game_mode == 0 : player has white pieces
         self.board = []
         self.game_mode = game_mode
+        self.depth = depth
         for i in range(8):
             self.board.append(['empty-block' for i in range(8)])
 

@@ -4,9 +4,6 @@ from ChessPiece import *
 import random
 
 
-ai_depth = 3
-
-
 def minimax(board, depth, alpha, beta, max_player, save_move, data):
 
     if depth == 0 or board.is_terminal():
@@ -56,11 +53,12 @@ def minimax(board, depth, alpha, beta, max_player, save_move, data):
 
 
 def get_ai_move(board):
-    moves = minimax(board, ai_depth, -math.inf, math.inf, True, True, [[], 0])
+    moves = minimax(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
+    # moves = [[pawn, move, move_score], total_score]
     if len(moves[0]) == 0:
         return False
-
-    piece_and_move = random.choice(moves[0])
+    best_score = max(moves[0], key=lambda x: x[2])[2]
+    piece_and_move = random.choice([move for move in moves[0] if move[2] == best_score])
     piece = piece_and_move[0]
     move = piece_and_move[1]
     if isinstance(piece, ChessPiece) and len(move) > 0 and isinstance(move, tuple):
