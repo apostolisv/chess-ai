@@ -54,7 +54,7 @@ def minimax(board, depth, alpha, beta, max_player, save_move, data):
 
 def get_ai_move(board):
     moves = minimax(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
-    # moves = [[pawn, move, move_score], total_score]
+    # moves = [[pawn, move, move_score], [..], [..],[..], total_score]
     if len(moves[0]) == 0:
         return False
     best_score = max(moves[0], key=lambda x: x[2])[2]
