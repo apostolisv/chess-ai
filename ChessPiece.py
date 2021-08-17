@@ -9,9 +9,6 @@ class ChessPiece:
     has_moved_history = []
     position_history = []
 
-    x = -1
-    y = -1
-
     def __init__(self, color, x, y):
         self.moved = False
         self.color = color
@@ -57,7 +54,7 @@ class ChessPiece:
         return 0
 
     def __repr__(self):
-        return '{}: {}'.format(self.type, self.color)
+        return '{}: {}|{},{}'.format(self.type, self.color, self.x, self.y)
 
 
 class Pawn(ChessPiece):
