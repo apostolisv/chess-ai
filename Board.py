@@ -3,6 +3,9 @@ from ChessPiece import *
 
 class Board:
 
+    whiteKing = King('white', 0, 4)
+    blackKing = King('black', 7, 4)
+
     def __init__(self, game_mode=0, depth=2):    # game_mode == 0 : player has white pieces
         self.board = []
         self.game_mode = game_mode
@@ -12,24 +15,24 @@ class Board:
 
     def place_pieces(self):
         for j in range(8):
-            self.board[1][j] = Pawn('white', 1, j)
-            self.board[6][j] = Pawn('black', 6, j)
-        self.board[0][0] = Rook('white', 0, 0)
-        self.board[0][7] = Rook('white', 0, 7)
-        self.board[0][1] = Knight('white', 0, 1)
-        self.board[0][6] = Knight('white', 0, 6)
-        self.board[0][2] = Bishop('white', 0, 2)
-        self.board[0][5] = Bishop('white', 0, 5)
-        self.board[0][3] = Queen('white', 0, 3)
-        self.board[0][4] = King('white', 0, 4)
-        self.board[7][0] = Rook('black', 7, 0)
-        self.board[7][7] = Rook('black', 7, 7)
-        self.board[7][1] = Knight('black', 7, 1)
-        self.board[7][6] = Knight('black', 7, 6)
-        self.board[7][2] = Bishop('black', 7, 2)
-        self.board[7][5] = Bishop('black', 7, 5)
-        self.board[7][3] = Queen('black', 7, 3)
-        self.board[7][4] = King('black', 7, 4)
+            self[1][j] = Pawn('white', 1, j)
+            self[6][j] = Pawn('black', 6, j)
+        self[0][0] = Rook('white', 0, 0)
+        self[0][7] = Rook('white', 0, 7)
+        self[0][1] = Knight('white', 0, 1)
+        self[0][6] = Knight('white', 0, 6)
+        self[0][2] = Bishop('white', 0, 2)
+        self[0][5] = Bishop('white', 0, 5)
+        self[0][3] = Queen('white', 0, 3)
+        self[0][4] = self.whiteKing
+        self[7][0] = Rook('black', 7, 0)
+        self[7][7] = Rook('black', 7, 7)
+        self[7][1] = Knight('black', 7, 1)
+        self[7][6] = Knight('black', 7, 6)
+        self[7][2] = Bishop('black', 7, 2)
+        self[7][5] = Bishop('black', 7, 5)
+        self[7][3] = Queen('black', 7, 3)
+        self[7][4] = self.blackKing
         if self.game_mode != 0:
             self.reverse()
 
@@ -67,14 +70,14 @@ class Board:
         if not self.is_valid_move(x, y):
             return False
         if isinstance(self.board[x][y], ChessPiece):
-            return piece.color != self.board[x][y].color
+            return piece.color != self[x][y].color
         return False
 
     def has_friend(self, piece, x, y):
         if not self.is_valid_move(x, y):
             return False
-        if isinstance(self.board[x][y], ChessPiece):
-            return piece.color == self.board[x][y].color
+        if isinstance(self[x][y], ChessPiece):
+            return piece.color == self[x][y].color
         return False
 
     @staticmethod
@@ -84,7 +87,7 @@ class Board:
     def has_empty_block(self, x, y):
         if not self.is_valid_move(x, y):
             return False
-        return not isinstance(self.board[x][y], ChessPiece)
+        return not isinstance(self[x][y], ChessPiece)
 
     def get_player_color(self):
         if self.game_mode == 0:
@@ -97,12 +100,12 @@ class Board:
         king_y = -1
         for i in range(8):
             for j in range(8):
-                if isinstance(self.board[i][j], ChessPiece):
-                    if self.board[i][j].type == 'King' and self.board[i][j].color == color:
+                if isinstance(self[i][j], ChessPiece):
+                    if self[i][j].type == 'King' and self[i][j].color == color:
                         king_x = i
                         king_y = j
-                    elif self.board[i][j].color != color:
-                        enemies.append(self.board[i][j])
+                    elif self[i][j].color != color:
+                        enemies.append(self[i][j])
         for enemy in enemies:
             moves = enemy.get_moves(self)
             if (king_x, king_y) in moves:
@@ -138,8 +141,8 @@ class Board:
         total_moves = 0
         for i in range(8):
             for j in range(8):
-                if isinstance(self.board[i][j], ChessPiece) and self.board[i][j].color == color:
-                    piece = self.board[i][j]
+                if isinstance(self[i][j], ChessPiece) and self[i][j].color == color:
+                    piece = self[i][j]
                     total_moves += len(piece.filter_moves(piece.get_moves(self), self))
                     if total_moves > 0:
                         return True
@@ -155,8 +158,8 @@ class Board:
 
         for i in range(8):
             for j in range(8):
-                if isinstance(self.board[i][j], ChessPiece):
-                    piece = self.board[i][j]
+                if isinstance(self[i][j], ChessPiece):
+                    piece = self[i][j]
                     if piece.type == 'Knight':
                         if piece.color == 'white':
                             total_white_knights += 1
@@ -193,8 +196,8 @@ class Board:
         black_points = 0
         for i in range(8):
             for j in range(8):
-                if isinstance(self.board[i][j], ChessPiece):
-                    piece = self.board[i][j]
+                if isinstance(self[i][j], ChessPiece):
+                    piece = self[i][j]
                     if piece.color == 'white':
                         white_points += piece.get_score()
                     else:
@@ -204,4 +207,4 @@ class Board:
         return white_points - black_points
 
     def __repr__(self):
-        return str(self.board[::-1]).replace('], ', ']\n')
+        return str(self[::-1]).replace('], ', ']\n')

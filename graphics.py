@@ -138,16 +138,19 @@ def start(board):
                         pygame.display.update()
                 else:
                     clicked_move = (x, y)
-                    if clicked_move in possible_piece_moves:
-                        board.make_move(piece, x, y)
-                        draw_background(board)
-                        has_available_move = get_ai_move(board)
-                        if has_available_move:
+                    try:
+                        if clicked_move in possible_piece_moves:
+                            board.make_move(piece, x, y)
                             draw_background(board)
-                    if board.white_won():
-                        return 0
-                    elif board.black_won():
-                        return 1
-                    elif board.draw():
-                        return 2
+                            has_available_move = get_ai_move(board)
+                            if has_available_move:
+                                draw_background(board)
+                        if board.white_won():
+                            return 0
+                        elif board.black_won():
+                            return 1
+                        elif board.draw():
+                            return 2
+                    except UnboundLocalError:
+                        pass
 
