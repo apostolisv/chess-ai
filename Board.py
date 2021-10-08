@@ -3,15 +3,17 @@ from ChessPiece import *
 
 class Board:
 
-    whiteKing = King('white', 0, 4)
-    blackKing = King('black', 7, 4)
+    whites = []
+    blacks = []
 
     def __init__(self, game_mode=0, depth=2):    # game_mode == 0 : player has white pieces
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
+        self.whiteKing = King('white', 0, 4)
+        self.blackKing = King('black', 7, 4)
         for i in range(8):
-            self.board.append(['empty-block' for i in range(8)])
+            self.board.append(['empty-block' for j in range(8)])
 
     def place_pieces(self):
         for j in range(8):
@@ -33,14 +35,29 @@ class Board:
         self[7][5] = Bishop('black', 7, 5)
         self[7][3] = Queen('black', 7, 3)
         self[7][4] = self.blackKing
+
+        self.save_pieces()
+
         if self.game_mode != 0:
             self.reverse()
+
+    def save_pieces(self):
+        for i in range(2):
+            for j in range(8):
+                self.whites.append(self[i][j])
+                self.blacks.append(self[i + 6][j])
 
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
         old_x = piece.x
         old_y = piece.y
         if keep_history:
             self.board[old_x][old_y].set_last_eaten(self.board[x][y])
+        else:
+            if isinstance(self.board[x][y], ChessPiece):
+                if self.board[x][y].color == 'white':
+                    self.whites.remove(self.board[x][y])
+                else:
+                    self.blacks.remove(self.board[x][y])
         self.board[x][y] = self.board[old_x][old_y]
         self.board[old_x][old_y] = 'empty-block'
         self.board[x][y].set_position(x, y, keep_history)
@@ -95,20 +112,15 @@ class Board:
         return 'black'
 
     def king_is_threatened(self, color):
-        enemies = []
-        king_x = -1
-        king_y = -1
-        for i in range(8):
-            for j in range(8):
-                if isinstance(self[i][j], ChessPiece):
-                    if self[i][j].type == 'King' and self[i][j].color == color:
-                        king_x = i
-                        king_y = j
-                    elif self[i][j].color != color:
-                        enemies.append(self[i][j])
+        if color == 'white':
+            enemies = self.blacks
+            king = self.whiteKing
+        else:
+            enemies = self.whites
+            king = self.blackKing
         for enemy in enemies:
             moves = enemy.get_moves(self)
-            if (king_x, king_y) in moves:
+            if (king.x, king.y) in moves:
                 return True
         return False
 
@@ -208,3 +220,8 @@ class Board:
 
     def __repr__(self):
         return str(self[::-1]).replace('], ', ']\n')
+
+    def get_king(self, piece):
+        if piece.color == 'white':
+            return self.whiteKing
+        return self.blackKing

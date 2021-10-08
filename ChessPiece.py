@@ -181,7 +181,7 @@ class Queen(ChessPiece):
         return moves
 
     def get_score(self):
-        return 120
+        return 240
 
 
 class King(ChessPiece):
