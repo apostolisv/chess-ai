@@ -66,36 +66,7 @@ def draw_background(board):
     for i in range(8):
         for j in range(8):
             if isinstance(board[i][j], ChessPiece):
-                if board[i][j].type == 'Pawn':
-                    if board[i][j].color == 'white':
-                        obj = whitePawn
-                    else:
-                        obj = blackPawn
-                elif board[i][j].type == 'Rook':
-                    if board[i][j].color == 'white':
-                        obj = whiteRook
-                    else:
-                        obj = blackRook
-                elif board[i][j].type == 'Knight':
-                    if board[i][j].color == 'white':
-                        obj = whiteKnight
-                    else:
-                        obj = blackKnight
-                elif board[i][j].type == 'Bishop':
-                    if board[i][j].color == 'white':
-                        obj = whiteBishop
-                    else:
-                        obj = blackBishop
-                elif board[i][j].type == 'Queen':
-                    if board[i][j].color == 'white':
-                        obj = whiteQueen
-                    else:
-                        obj = blackQueen
-                else:
-                    if board[i][j].color == 'white':
-                        obj = whiteKing
-                    else:
-                        obj = blackKing
+                obj = globals()[f'{board[i][j].color}{board[i][j].type}']
                 screen.blit(obj, (step_x, step_y))
             step_x += 75
         step_x = 0
