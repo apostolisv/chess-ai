@@ -16,4 +16,8 @@ Computer
 
 The Computer class is a static class and it is used to get a move from the computer. There is a method that returns a random move and a method that returns an ai move using the minimax alogirthm.
 
+AI
+
+The minimax algorithm starts by making every possible (valid) move, and for each one of those moves, it simulates the opponents move that it's in their best interest. Note that since the goal of the game is not to "eat" the king, but instead "trap" him, the computer assumes that the player can make illegal moves. This is a recursive algorithm that stop when there are no more moves available, or when the board is terminal.
+
 [Chess assets by John Pablok CC-BY-SA 3.0](https://opengameart.org/content/chess-pieces-and-board-squares)
