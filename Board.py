@@ -6,10 +6,11 @@ class Board:
     whites = []
     blacks = []
 
-    def __init__(self, game_mode=0, depth=2):    # game_mode == 0 : player has white pieces
+    def __init__(self, game_mode, ai=False, depth=2):    # game_mode == 0 : player has white pieces
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
+        self.ai = ai
         self.whiteKing = King('white', 0, 4)
         self.blackKing = King('black', 7, 4)
         for i in range(8):

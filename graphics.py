@@ -76,11 +76,12 @@ def draw_background(board):
 
 def start(board):
     global screen
+    possible_piece_moves = []
     running = True
     visible_moves = False
     dimensions = pygame.display.get_surface().get_size()
     piece = None
-    if board.game_mode == 1:
+    if board.game_mode == 1 and board.ai:
         get_ai_move(board)
         draw_background(board)
     while running:
@@ -90,7 +91,7 @@ def start(board):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x = 7 - pygame.mouse.get_pos()[1] // 75
                 y = pygame.mouse.get_pos()[0] // 75
-                if isinstance(board[x][y], ChessPiece) and board.get_player_color() == board[x][y].color:
+                if isinstance(board[x][y], ChessPiece) and (board.get_player_color() == board[x][y].color or not board.ai) and (x, y) not in possible_piece_moves:
                     piece = board[x][y]
                     moves = piece.filter_moves(piece.get_moves(board), board)
                     move_positions = []
@@ -112,10 +113,12 @@ def start(board):
                     try:
                         if clicked_move in possible_piece_moves:
                             board.make_move(piece, x, y)
+                            possible_piece_moves.clear()
                             draw_background(board)
-                            has_available_move = get_ai_move(board)
-                            if has_available_move:
-                                draw_background(board)
+                            if board.ai:
+                                has_available_move = get_ai_move(board)
+                                if has_available_move:
+                                    draw_background(board)
                         if board.white_won():
                             return 0
                         elif board.black_won():
