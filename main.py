@@ -3,23 +3,17 @@ from Board import *
 
 
 if __name__ == '__main__':
-    board = Board(game_mode=0, ai=False, depth=3)  # game_mode == 0: player has whites / 1: blacks
+    board = Board(game_mode=0, ai=True, depth=3)  # game_mode == 0: whites down / 1: blacks down
     board.place_pieces()
     graphics.initialize()
     graphics.draw_background(board)
     result = graphics.start(board)
     if result is None:
         exit()
-    elif result == 0:             # white wins
-        if board.game_mode == 0:
-            print('YOU WIN!')
-        else:
-            print('YOU LOSE!')
-    elif result == 1:           # black wins
-        if board.game_mode == 1:
-            print('YOU WIN!')
-        else:
-            print('YOU LOSE!')
-    elif result == 2:           # draw
+    elif result == 0:             
+        print('WHITE WINS!')
+    elif result == 1:           
+        print('BLACK WINS!')
+    elif result == 2:           
         print('DRAW!')
     input()
