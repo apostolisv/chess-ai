@@ -10,7 +10,7 @@ The Board class consists of a simple 2D list to store the chess pieces and a num
 
 Chess Piece
 
-The ChessPiece class is an abstract class and it is used as a parent for every piece. It consists of a method for moves filtering (prevent illegal moves like exposing the king) and some methods to keep the previous state of the chess piece intact (required by the ai when calling unmake_move()). Every chess piece is equipped with a get_score() function that is used when evaluating the board. The scores are 10 points for the pawns, 20 for knights, 30 for bishops and rooks, 120 for the queen and 1000 for the king.
+The ChessPiece class is an abstract class and it is used as a parent for every piece. It consists of a method for moves filtering (prevent illegal moves like exposing the king) and some methods to keep the previous state of the chess piece intact (required by the ai when calling unmake_move()). Every chess piece is equipped with a get_score() function that is used when evaluating the board. The scores are 10 points for the pawns, 20 for knights, 30 for bishops and rooks, 240 for the queen and 1000 for the king.
 
 Computer
 
