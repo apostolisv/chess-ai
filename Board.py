@@ -17,9 +17,9 @@ class Board:
             self.board.append(['empty-block' for j in range(8)])
 
     def place_pieces(self):
-        for j in range(8):
-            self[1][j] = Pawn('white', 1, j)
-            self[6][j] = Pawn('black', 6, j)
+        # for j in range(8):
+        #     self[1][j] = Pawn('white', 1, j)
+        #     self[6][j] = Pawn('black', 6, j)
         self[0][0] = Rook('white', 0, 0)
         self[0][7] = Rook('white', 0, 7)
         self[0][1] = Knight('white', 0, 1)
@@ -115,18 +115,21 @@ class Board:
             return 'white'
         return 'black'
 
-    def king_is_threatened(self, color):
+    def king_is_threatened(self, color, move=None):
         if color == 'white':
             enemies = self.blacks
             king = self.whiteKing
         else:
             enemies = self.whites
             king = self.blackKing
+        threats = []
         for enemy in enemies:
             moves = enemy.get_moves(self)
             if (king.x, king.y) in moves:
-                return True
-        return False
+                threats.append(enemy)
+        if move and len(threats) == 1 and threats[0].x == move[0] and threats[0].y == move[1]:
+            return False
+        return True if len(threats) > 0 else False
 
     def is_terminal(self):
         terminal1 = self.white_won()
