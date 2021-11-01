@@ -3,8 +3,9 @@ from Board import *
 
 
 if __name__ == '__main__':
-    board = Board(game_mode=0, ai=True, depth=3)  # game_mode == 0: whites down / 1: blacks down
+    board = Board(game_mode=0, ai=False, depth=3)  # game_mode == 0: whites down / 1: blacks down
     board.place_pieces()
+    
     graphics.initialize()
     graphics.draw_background(board)
     result = graphics.start(board)

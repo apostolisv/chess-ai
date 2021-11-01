@@ -22,18 +22,18 @@ class Board:
         #     self[6][j] = Pawn('black', 6, j)
         self[0][0] = Rook('white', 0, 0)
         self[0][7] = Rook('white', 0, 7)
-        self[0][1] = Knight('white', 0, 1)
-        self[0][6] = Knight('white', 0, 6)
-        self[0][2] = Bishop('white', 0, 2)
-        self[0][5] = Bishop('white', 0, 5)
+        #self[0][1] = Knight('white', 0, 1)
+        #self[0][6] = Knight('white', 0, 6)
+        #self[0][2] = Bishop('white', 0, 2)
+        #self[0][5] = Bishop('white', 0, 5)
         self[0][3] = Queen('white', 0, 3)
         self[0][4] = self.whiteKing
         self[7][0] = Rook('black', 7, 0)
         self[7][7] = Rook('black', 7, 7)
-        self[7][1] = Knight('black', 7, 1)
-        self[7][6] = Knight('black', 7, 6)
-        self[7][2] = Bishop('black', 7, 2)
-        self[7][5] = Bishop('black', 7, 5)
+        #self[7][1] = Knight('black', 7, 1)
+        #self[7][6] = Knight('black', 7, 6)
+        #self[7][2] = Bishop('black', 7, 2)
+        #self[7][5] = Bishop('black', 7, 5)
         self[7][3] = Queen('black', 7, 3)
         self[7][4] = self.blackKing
 
@@ -147,12 +147,12 @@ class Board:
         return False
 
     def white_won(self):
-        if self.king_is_threatened('white') and not self.has_moves('white'):
+        if self.king_is_threatened('black') and not self.has_moves('black'):
             return True
         return False
 
     def black_won(self):
-        if self.king_is_threatened('black') and not self.has_moves('black'):
+        if self.king_is_threatened('white') and not self.has_moves('white'):
             return True
         return False
 
