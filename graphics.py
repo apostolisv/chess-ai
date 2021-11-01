@@ -137,7 +137,7 @@ def start(board):
                             possible_piece_moves.clear()
                             draw_background(board)
                             if board.ai:
-                                has_available_move = get_ai_move(board)
+                                get_ai_move(board)
                                     
                         if board.white_won():
                             game_over = True
