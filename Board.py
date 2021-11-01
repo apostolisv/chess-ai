@@ -5,14 +5,14 @@ class Board:
 
     whites = []
     blacks = []
+    whiteKing = King('white', 0, 4)
+    blackKing = King('black', 7, 4)
 
-    def __init__(self, game_mode, ai=False, depth=2):    # game_mode == 0 : player has white pieces
+    def __init__(self, game_mode, ai=False, depth=2):    # game_mode == 0 : whites down/blacks up
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
         self.ai = ai
-        self.whiteKing = King('white', 0, 4)
-        self.blackKing = King('black', 7, 4)
         for i in range(8):
             self.board.append(['empty-block' for j in range(8)])
 
@@ -43,10 +43,13 @@ class Board:
             self.reverse()
 
     def save_pieces(self):
-        for i in range(2):
+        for i in range(8):
             for j in range(8):
-                self.whites.append(self[i][j])
-                self.blacks.append(self[i + 6][j])
+                if isinstance(self[i][j], ChessPiece):
+                    if self[i][j].color == 'white':
+                        self.whites.append(self[i][j])
+                    else:
+                        self.blacks.append(self[i][j])
 
     def make_move(self, piece, x, y, keep_history=False):    # history is logged when ai searches for moves
         old_x = piece.x
