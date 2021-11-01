@@ -37,7 +37,8 @@ highlight_block = pygame.image.load('assets/JohnPablok Cburnett Chess set/128px/
 highlight_block = pygame.transform.scale(highlight_block, (75, 75))
 
 screen = None
-
+pygame.font.init()
+font = pygame.font.SysFont('Comic Sans MS', 30)
 
 def initialize():
     global screen
@@ -45,12 +46,11 @@ def initialize():
     pygame.display.set_caption('Chess!')
     icon = pygame.image.load('assets/icon.png')
     pygame.display.set_icon(icon)
-    screen = pygame.display.set_mode((600, 600))
-
+    screen = pygame.display.set_mode((600, 650))
+    screen.fill((0, 0, 0))
 
 def draw_background(board):
-    screen.fill((100, 0, 0))
-
+    
     block_x = 0
     for i in range(4):
         block_y = 0
@@ -73,6 +73,20 @@ def draw_background(board):
         step_y -= 75
     pygame.display.update()
 
+def draw_text(text):
+    s = pygame.Surface((400, 50))
+    s.fill((0, 0, 0))
+    screen.blit(s, (100, 600))
+    text_surface = font.render(text, False, (237, 237, 237))
+    if 'DRAW' in text:
+        x = 260
+    else:
+        x = 230
+    text_surface_restart = font.render('PRESS "SPACE" TO RESTART', False, (237, 237, 237))
+    screen.blit(text_surface, (x, 600))
+    screen.blit(text_surface_restart, (150, 620))
+    pygame.display.update()
+
 
 def start(board):
     global screen
@@ -80,15 +94,22 @@ def start(board):
     running = True
     visible_moves = False
     dimensions = pygame.display.get_surface().get_size()
+    game_over = False
     piece = None
     if board.game_mode == 1 and board.ai:
         get_ai_move(board)
         draw_background(board)
     while running:
+        if game_over:
+            draw_text(game_over_txt)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if game_over and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return True
+            if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
                 x = 7 - pygame.mouse.get_pos()[1] // 75
                 y = pygame.mouse.get_pos()[0] // 75
                 if isinstance(board[x][y], ChessPiece) and (board.get_player_color() == board[x][y].color or not board.ai) and (x, y) not in possible_piece_moves:
@@ -97,7 +118,7 @@ def start(board):
                     move_positions = []
                     possible_piece_moves = []
                     for move in moves:
-                        move_positions.append((dimensions[0] - (8 - move[1]) * 75, dimensions[1] - move[0] * 75 - 75))
+                        move_positions.append((dimensions[0] - (8 - move[1]) * 75, dimensions[1] - move[0] * 75 - 125))
                         move_x = 7 - move_positions[-1][1] // 75
                         move_y = move_positions[-1][0] // 75
                         possible_piece_moves.append((move_x, move_y))
@@ -117,14 +138,15 @@ def start(board):
                             draw_background(board)
                             if board.ai:
                                 has_available_move = get_ai_move(board)
-                                if has_available_move:
-                                    draw_background(board)
+                                    
                         if board.white_won():
-                            return 0
+                            game_over = True
+                            game_over_txt = 'WHITE WINS!'
                         elif board.black_won():
-                            return 1
+                            game_over = True
+                            game_over_txt = 'BLACK WINS!'
                         elif board.draw():
-                            return 2
+                            game_over = True
+                            game_over_txt = 'DRAW!'
                     except UnboundLocalError:
                         pass
-

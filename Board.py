@@ -5,32 +5,39 @@ class Board:
 
     whites = []
     blacks = []
-    whiteKing = King('white', 0, 4)
-    blackKing = King('black', 7, 4)
+    
 
     def __init__(self, game_mode, ai=False, depth=2):    # game_mode == 0 : whites down/blacks up
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
         self.ai = ai
+
+    def initialize_board(self):
         for i in range(8):
             self.board.append(['empty-block' for j in range(8)])
 
     def place_pieces(self):
+        self.board.clear()
+        self.whites.clear()
+        self.blacks.clear()
+        self.initialize_board()
+        self.whiteKing = King('white', 0, 4)
+        self.blackKing = King('black', 7, 4)
         # for j in range(8):
         #     self[1][j] = Pawn('white', 1, j)
         #     self[6][j] = Pawn('black', 6, j)
-        self[0][0] = Rook('white', 0, 0)
-        self[0][7] = Rook('white', 0, 7)
-        #self[0][1] = Knight('white', 0, 1)
+        #self[0][0] = Rook('white', 0, 0)
+        #self[0][7] = Rook('white', 0, 7)
+        self[0][1] = Knight('white', 0, 1)
         #self[0][6] = Knight('white', 0, 6)
         #self[0][2] = Bishop('white', 0, 2)
         #self[0][5] = Bishop('white', 0, 5)
         self[0][3] = Queen('white', 0, 3)
         self[0][4] = self.whiteKing
-        self[7][0] = Rook('black', 7, 0)
-        self[7][7] = Rook('black', 7, 7)
-        #self[7][1] = Knight('black', 7, 1)
+        #self[7][0] = Rook('black', 7, 0)
+        #self[7][7] = Rook('black', 7, 7)
+        self[7][1] = Knight('black', 7, 1)
         #self[7][6] = Knight('black', 7, 6)
         #self[7][2] = Bishop('black', 7, 2)
         #self[7][5] = Bishop('black', 7, 5)
@@ -175,40 +182,43 @@ class Board:
         total_other_white_pieces = 0
         total_other_black_pieces = 0
 
-        for i in range(8):
-            for j in range(8):
-                if isinstance(self[i][j], ChessPiece):
-                    piece = self[i][j]
-                    if piece.type == 'Knight':
-                        if piece.color == 'white':
-                            total_white_knights += 1
-                        else:
-                            total_black_knights += 1
-                    if piece.type == 'Bishop':
-                        if piece.color == 'white':
-                            total_white_bishops += 1
-                        else:
-                            total_black_bishops += 1
-                    elif piece.type != 'King':
-                        if piece.color == 'white':
-                            total_other_white_pieces += 1
-                        else:
-                            total_other_black_pieces += 1
+        for piece in self.whites:
+            if piece.type == 'Knight':
+                total_white_knights += 1
+            elif piece.type == 'Bishop':
+                total_white_bishops += 1
+            elif piece.type != 'King':
+                total_other_white_pieces += 1
+
+        for piece in self.blacks:
+            if piece.type == 'Knight':
+                total_black_knights += 1
+            elif piece.type == 'Bishop':
+                total_black_bishops += 1
+            elif piece.type != 'King':
+                total_other_black_pieces += 1
+
         weak_white_pieces = total_white_bishops + total_white_knights
         weak_black_pieces = total_black_bishops + total_black_knights
 
-        if total_other_black_pieces > 0 or total_other_white_pieces > 0:
-            return False
-        if weak_black_pieces == weak_white_pieces == 0 and total_other_white_pieces == total_other_black_pieces == 0:
-            return True
-        if weak_white_pieces == 1 and weak_black_pieces == 1:
-            return True
-        if weak_white_pieces == 0 and weak_black_pieces == 1 or weak_white_pieces == 1 and weak_black_pieces == 0:
-            return True
-        if total_white_knights == 2 and weak_black_pieces == total_other_black_pieces == 0:
-            return True
-        if total_black_knights == 2 and weak_white_pieces == total_other_white_pieces == 0:
-            return True
+        if self.whiteKing and self.blackKing:
+            if weak_white_pieces + total_other_white_pieces + weak_black_pieces + total_other_black_pieces == 0:
+                return True
+            if weak_white_pieces + total_other_white_pieces == 0:
+                if weak_black_pieces == 1:
+                    return True
+            if weak_black_pieces + total_other_black_pieces == 0:
+                if weak_white_pieces == 1:
+                    return True
+            if len(self.whites) == 1 and len(self.blacks) == 16 or len(self.blacks) == 1 and len(self.whites) == 16:
+                return True
+            if total_white_knights == weak_white_pieces + total_other_white_pieces and len(self.blacks) == 1:
+                return True
+            if total_black_knights == weak_black_pieces + total_other_black_pieces and len(self.whites) == 1:
+                return True
+            if weak_white_pieces == weak_black_pieces == 1 and total_other_white_pieces == total_other_black_pieces == 0:
+                return True
+
 
     def evaluate(self):
         white_points = 0
