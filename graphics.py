@@ -138,6 +138,7 @@ def start(board):
                             draw_background(board)
                             if board.ai:
                                 get_ai_move(board)
+                                draw_background(board)
                                     
                         if board.white_won():
                             game_over = True
