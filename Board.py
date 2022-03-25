@@ -250,7 +250,7 @@ class Board:
                 else:
                     un = '\u25AF'
                 data[idx][i] = un
-        return data
+        return data[::-1]
 
     def get_king(self, piece):
         if piece.color == 'white':

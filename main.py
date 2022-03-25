@@ -5,7 +5,7 @@ from Board import *
 if __name__ == '__main__':
     keep_playing = True
 
-    board = Board(game_mode=0, ai=True, depth=2, log=True)  # game_mode == 0: whites down / 1: blacks down
+    board = Board(game_mode=0, ai=True, depth=1, log=True)  # game_mode == 0: whites down / 1: blacks down
 
     while keep_playing:
         graphics.initialize()
