@@ -9,12 +9,13 @@ class ChessPiece:
     has_moved_history = []
     position_history = []
 
-    def __init__(self, color, x, y):
+    def __init__(self, color, x, y, unicode):
         self.moved = False
         self.color = color
         self.x = x
         self.y = y
         self.type = self.__class__.__name__
+        self.unicode = unicode
 
     def filter_moves(self, moves, board):
         final_moves = moves[:]
@@ -25,7 +26,7 @@ class ChessPiece:
             board.unmake_move(self)
         return final_moves
 
-    def get_moves(self):
+    def get_moves(self, board):
         pass
 
     def get_last_eaten(self):
@@ -170,8 +171,8 @@ class Queen(ChessPiece):
 
     def get_moves(self, board):
         moves = []
-        rook = Rook(self.color, self.x, self.y)
-        bishop = Bishop(self.color, self.x, self.y)
+        rook = Rook(self.color, self.x, self.y, self.unicode)
+        bishop = Bishop(self.color, self.x, self.y, self.unicode)
         rook_moves = rook.get_moves(board)
         bishop_moves = bishop.get_moves(board)
         if rook_moves:

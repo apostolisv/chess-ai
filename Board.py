@@ -5,13 +5,13 @@ class Board:
 
     whites = []
     blacks = []
-    
 
-    def __init__(self, game_mode, ai=False, depth=2):    # game_mode == 0 : whites down/blacks up
+    def __init__(self, game_mode, ai=False, depth=2, log=False):    # game_mode == 0 : whites down/blacks up
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
         self.ai = ai
+        self.log = log
 
     def initialize_board(self):
         for i in range(8):
@@ -22,26 +22,26 @@ class Board:
         self.whites.clear()
         self.blacks.clear()
         self.initialize_board()
-        self.whiteKing = King('white', 0, 4)
-        self.blackKing = King('black', 7, 4)
+        self.whiteKing = King('white', 0, 4, '\u265A')
+        self.blackKing = King('black', 7, 4, '\u2654')
         for j in range(8):
-            self[1][j] = Pawn('white', 1, j)
-            self[6][j] = Pawn('black', 6, j)
-        self[0][0] = Rook('white', 0, 0)
-        self[0][7] = Rook('white', 0, 7)
-        self[0][1] = Knight('white', 0, 1)
-        self[0][6] = Knight('white', 0, 6)
-        self[0][2] = Bishop('white', 0, 2)
-        self[0][5] = Bishop('white', 0, 5)
-        self[0][3] = Queen('white', 0, 3)
+            self[1][j] = Pawn('white', 1, j, '\u265F')
+            self[6][j] = Pawn('black', 6, j, '\u2659')
+        self[0][0] = Rook('white', 0, 0, '\u265C')
+        self[0][7] = Rook('white', 0, 7, '\u265C')
+        self[0][1] = Knight('white', 0, 1, '\u265E')
+        self[0][6] = Knight('white', 0, 6, '\u265E')
+        self[0][2] = Bishop('white', 0, 2, '\u265D')
+        self[0][5] = Bishop('white', 0, 5, '\u265D')
+        self[0][3] = Queen('white', 0, 3, '\u265B')
         self[0][4] = self.whiteKing
-        self[7][0] = Rook('black', 7, 0)
-        self[7][7] = Rook('black', 7, 7)
-        self[7][1] = Knight('black', 7, 1)
-        self[7][6] = Knight('black', 7, 6)
-        self[7][2] = Bishop('black', 7, 2)
-        self[7][5] = Bishop('black', 7, 5)
-        self[7][3] = Queen('black', 7, 3)
+        self[7][0] = Rook('black', 7, 0, '\u2656')
+        self[7][7] = Rook('black', 7, 7, '\u2656')
+        self[7][1] = Knight('black', 7, 1, '\u2658')
+        self[7][6] = Knight('black', 7, 6, '\u2658')
+        self[7][2] = Bishop('black', 7, 2, '\u2657')
+        self[7][5] = Bishop('black', 7, 5, '\u2657')
+        self[7][3] = Queen('black', 7, 3, '\u2655')
         self[7][4] = self.blackKing
 
         self.save_pieces()
@@ -219,7 +219,6 @@ class Board:
             if weak_white_pieces == weak_black_pieces == 1 and total_other_white_pieces == total_other_black_pieces == 0:
                 return True
 
-
     def evaluate(self):
         white_points = 0
         black_points = 0
@@ -235,10 +234,15 @@ class Board:
             return black_points - white_points
         return white_points - black_points
 
-    def __repr__(self):
+    def __str__(self):
         return str(self[::-1]).replace('], ', ']\n')
+
+    def __repr__(self):
+        return 'Board'
 
     def get_king(self, piece):
         if piece.color == 'white':
             return self.whiteKing
         return self.blackKing
+
+

@@ -1,9 +1,42 @@
 import math
-
+from Board import Board
 from ChessPiece import *
+from functools import wraps
 import random
 
 
+log_file = 'minimax_tree.txt'
+
+
+def log_tree(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        board: Board = args[0]
+        if board.log:
+            depth = args[1]
+            write_to_file(board, depth)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def write_to_file(board: Board, current_depth):
+    if board.depth == current_depth:
+        open(log_file, 'w').close()
+    with open(log_file, 'a', encoding='utf-8') as f:
+        for idx, row in enumerate(board.board):
+            for p in row:
+                if isinstance(p, ChessPiece):
+                    un = p.unicode
+                else:
+                    un = '\u25AF'
+                f.write(un)
+            if idx == 4:
+                f.write('\t eval: {} | depth: {}'.format(board.evaluate(), current_depth))
+            f.write('\n')
+        f.write("\n")
+
+
+@log_tree
 def minimax(board, depth, alpha, beta, max_player, save_move, data):
 
     if depth == 0 or board.is_terminal():
