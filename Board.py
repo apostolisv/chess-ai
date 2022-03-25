@@ -1,4 +1,5 @@
 from ChessPiece import *
+from copy import deepcopy
 
 
 class Board:
@@ -15,7 +16,7 @@ class Board:
 
     def initialize_board(self):
         for i in range(8):
-            self.board.append(['empty-block' for j in range(8)])
+            self.board.append(['empty-block' for _ in range(8)])
 
     def place_pieces(self):
         self.board.clear()
@@ -239,6 +240,17 @@ class Board:
 
     def __repr__(self):
         return 'Board'
+
+    def unicode_array_repr(self):
+        data = deepcopy(self.board)
+        for idx, row in enumerate(self.board):
+            for i, p in enumerate(row):
+                if isinstance(p, ChessPiece):
+                    un = p.unicode
+                else:
+                    un = '\u25AF'
+                data[idx][i] = un
+        return data
 
     def get_king(self, piece):
         if piece.color == 'white':

@@ -2,10 +2,11 @@ import math
 from Board import Board
 from ChessPiece import *
 from functools import wraps
+from Logger import Logger, BoardRepr
 import random
 
 
-log_file = 'minimax_tree.txt'
+logger = Logger()
 
 
 def log_tree(func):
@@ -20,20 +21,11 @@ def log_tree(func):
 
 
 def write_to_file(board: Board, current_depth):
+    global logger
     if board.depth == current_depth:
-        open(log_file, 'w').close()
-    with open(log_file, 'a', encoding='utf-8') as f:
-        for idx, row in enumerate(board.board):
-            for p in row:
-                if isinstance(p, ChessPiece):
-                    un = p.unicode
-                else:
-                    un = '\u25AF'
-                f.write(un)
-            if idx == 4:
-                f.write('\t eval: {} | depth: {}'.format(board.evaluate(), current_depth))
-            f.write('\n')
-        f.write("\n")
+        logger.clear()
+    board_repr = BoardRepr(board.unicode_array_repr(), current_depth, board.evaluate())
+    logger.append(board_repr)
 
 
 @log_tree
@@ -87,6 +79,8 @@ def minimax(board, depth, alpha, beta, max_player, save_move, data):
 
 def get_ai_move(board):
     moves = minimax(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
+    if board.log:
+        logger.write()
     # moves = [[pawn, move, move_score], [..], [..],[..], total_score]
     if len(moves[0]) == 0:
         return False
