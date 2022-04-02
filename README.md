@@ -23,7 +23,7 @@ The Computer class is a static class and it is used to get a move from the compu
 ### AI
 
 
-The minimax algorithm starts by making every possible (valid) move, and for each one of those moves, it simulates the opponents move that it's in their best interest. Note that since the goal of the game is not to "eat" the king, but instead "trap" him, the computer assumes that the player can make illegal moves. This is a recursive algorithm that stop when there are no more moves available, or when the board is terminal.
+The minimax algorithm starts by making every possible (valid) move, and for each one of those moves, it simulates the opponents move that it's in their best interest. Note that since the goal of the game is not to "eat" the king, but instead "trap" him, the computer assumes that the player can make illegal moves. This is a recursive algorithm that stops when there are no more moves available, or the board is terminal.
 ***
 ### Logging
 By setting log=True in the board constructor parameters, the Logger.py script will produce a .txt file that contains the minimax tree of the current ai move decision. 
