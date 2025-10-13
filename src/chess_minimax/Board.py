@@ -1,4 +1,4 @@
-from ChessPiece import *
+from .ChessPiece import *
 from copy import deepcopy
 
 

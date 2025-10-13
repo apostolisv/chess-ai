@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/chess_ai/Board.py
+src/chess_ai/ChessPiece.py
+src/chess_ai/Computer.py
+src/chess_ai/Logger.py
+src/chess_ai/graphics.py
+src/chess_ai/main.py
+src/chess_ai.egg-info/PKG-INFO
+src/chess_ai.egg-info/SOURCES.txt
+src/chess_ai.egg-info/dependency_links.txt
+src/chess_ai.egg-info/requires.txt
+src/chess_ai.egg-info/top_level.txt

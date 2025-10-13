@@ -1,0 +1,19 @@
+[project]
+name = "chess-minimax"
+version = "0.1.8"
+description = "A pure Python chess AI (minimax algorithm) integrated with a PyGame to interact with a chess board."
+readme = "README.md"
+authors = [
+    { name = "hobs", email = "git@totalgood.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pygame>=2.6.1",
+]
+
+[project.scripts]
+chess-minimax = "chess_minimax:main"
+
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"

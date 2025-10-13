@@ -1,8 +1,8 @@
 import math
-from Board import Board
-from ChessPiece import *
+from .Board import Board
+from .ChessPiece import *
 from functools import wraps
-from Logger import Logger, BoardRepr
+from .Logger import Logger, BoardRepr
 import random
 
 
